@@ -11,14 +11,18 @@
     "type": "git",
     "url": "https://github.com/StukC/CIS476DriveShare.git"
   },
-  "keywords": ["car rental", "peer-to-peer", "DriveShare"],
+  "keywords": [
+    "car rental",
+    "peer-to-peer",
+    "DriveShare"
+  ],
   "author": "Your Name",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "mongoose": "^5.11.15",
-    "socket.io": "^4.0.0",
-    "jsonwebtoken": "^8.5.1"
+    "express": "^4.19.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.22",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
