@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const router = express.Router();
+const sessionManager = require('../utils/sessionManager');
+const verifyToken = require('../middleware/verifyToken');
 
 router.post('/register', async (req, res) => {
   try {
@@ -32,7 +34,7 @@ router.post('/login', async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).send('Invalid credentials');
     }
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
+    const token = sessionManager.createToken({ userId: user._id });
     res.send({ token });
   } catch (error) {
     res.status(400).send(error);
