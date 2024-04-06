@@ -4,20 +4,25 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
 
-    fetch('/login', {
+    fetch('/auth/login', { // Changed to match your routing prefix
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP status ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.token) {
-            // Save the token in localStorage and redirect or inform the user
+            // Consider the security implications of using localStorage for tokens
             localStorage.setItem('token', data.token);
             alert('Login successful!');
-            // Redirect to another page or update UI
+            window.location.href = '/home.html'; // Redirect to the home or dashboard page
         } else {
             alert('Login failed. Please check your credentials.');
         }
