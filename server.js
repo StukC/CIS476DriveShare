@@ -1,6 +1,13 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
 
 app.use(express.static('public'));
 
