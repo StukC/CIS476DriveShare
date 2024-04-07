@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DriveShare - Home</title>
     <link rel="stylesheet" href="home.css">
+    <script>
+        function logout() {
+            localStorage.removeItem('token'); // Use 'token' as the key, as found in your login.js
+            window.location.href = 'login.html'; // Redirect to the login page
+        }
+      </script>
 </head>
 <body>
     <div class="container">
@@ -15,7 +21,7 @@
                     <li><a href="list-car.html">List Your Car</a></li>
                     <li><a href="search.html">Find a Car</a></li>
                     <li><a href="profile.html">My Profile</a></li>
-                    <li><a href="logout.php">Logout</a></li>
+                    <li><a href="#" onclick="logout(); return false;">Logout</a></li>
                 </ul>
             </nav>
         </header>
