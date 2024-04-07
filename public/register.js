@@ -1,27 +1,33 @@
-document.getElementById('registerForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+// Mediator object
+const authMediator = (function() {
+    const channels = {};
 
-    // Fetch form data
-    const formData = {
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value,
-        securityQuestion1: "Your first pet's name?", // The actual security question text
-        securityAnswer1: document.getElementById('securityAnswer1').value,
-        securityQuestion2: "The city you were born in?", // The actual security question text
-        securityAnswer2: document.getElementById('securityAnswer2').value,
-        securityQuestion3: "Your favorite book?", // The actual security question text
-        securityAnswer3: document.getElementById('securityAnswer3').value
+    const subscribe = function(channel, fn) {
+        if (!channels[channel]) channels[channel] = [];
+        channels[channel].push({ context: this, callback: fn });
+        return this;
     };
 
-    // Add console.log here to ensure formData is correct
-    console.log(formData);
+    const publish = function(channel, ...args) {
+        if (!channels[channel]) return false;
+        channels[channel].forEach(subscription => {
+            subscription.callback.apply(subscription.context, args);
+        });
+        return this;
+    };
 
-    // Disable the register button to prevent multiple submissions
+    return {
+        subscribe,
+        publish
+    };
+})();
+
+// Subscription for register event
+authMediator.subscribe('register', formData => {
     const registerButton = document.querySelector('button[type="submit"]');
     registerButton.disabled = true;
 
-    // Send the POST request to the server
-    fetch('/auth/register', { // Adjust this if your route is different
+    fetch('/auth/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -35,17 +41,34 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
         return response.text();
     })
     .then(data => {
-        // Log the success response from the server
         console.log(data);
         alert('Registration successful!');
-        window.location.href = '/login.html'; // Redirect after register
+        window.location.href = '/login.html';
     })
-    .catch((error) => {
+    .catch(error => {
         console.error('Registration failed:', error);
         alert('Registration failed. Please try again.');
-        
     })
     .finally(() => {
-        registerButton.disabled = false; // Re-enable the register button
+        registerButton.disabled = false;
     });
+});
+
+// Register form event listener using mediator
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = {
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        securityQuestion1: "Your first pet's name?", // Use actual question text
+        securityAnswer1: document.getElementById('securityAnswer1').value,
+        securityQuestion2: "The city you were born in?", // Use actual question text
+        securityAnswer2: document.getElementById('securityAnswer2').value,
+        securityQuestion3: "Your favorite book?", // Use actual question text
+        securityAnswer3: document.getElementById('securityAnswer3').value
+    };
+
+    console.log(formData);
+    authMediator.publish('register', formData);
 });
