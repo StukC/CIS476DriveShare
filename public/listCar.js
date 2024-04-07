@@ -1,60 +1,66 @@
 document.addEventListener('DOMContentLoaded', function() {
     const carListingForm = document.getElementById('carListingForm');
     const carImageInput = document.getElementById('carImage');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
 
     carListingForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        // Create a FormData object, which allows you to form key-value pairs
-        const formData = new FormData(carListingForm);
-        
-        // If an image was selected, read it as Data URL (Base64)
-        if (carImageInput.files.length > 0) {
-            const file = carImageInput.files[0];
-            const reader = new FileReader();
-
-            reader.onloadend = function() {
-                // After conversion, add the Base64 image to the form data
-                formData.append('carImage', reader.result);
-
-                // Send the form data with the Base64 image to the server
-                submitCarListing(formData);
-            };
-
-            reader.readAsDataURL(file); // This will convert the image to Base64
-        } else {
-            // If no image, just send the form data
-            submitCarListing(formData);
+        // Validate dates
+        if (!validateDates()) {
+            alert('Please check the dates. The start date must be before the end date.');
+            return;
         }
-    });
 
-    function submitCarListing(formData) {
-        // Here we handle the submission to the server
-        // Assuming the server is expecting JSON, we'll convert FormData to a JSON object
-        const jsonData = Object.fromEntries(formData.entries());
+        // Create a FormData object, which allows you to form key-value pairs
+        const formData = new FormData();
+        formData.append('make', carListingForm.elements['make'].value);
+        formData.append('model', carListingForm.elements['model'].value);
+        formData.append('year', carListingForm.elements['year'].value);
+        formData.append('mileage', carListingForm.elements['mileage'].value);
+        formData.append('features', carListingForm.elements['features'].value); // Assuming this is a comma-separated list
+        formData.append('location', carListingForm.elements['location'].value); // Assuming this is a stringified JSON of coordinates
+        formData.append('pricing', JSON.stringify({ perDay: carListingForm.elements['pricePerDay'].value }));
+        formData.append('availability', JSON.stringify([{ startDate: startDateInput.value, endDate: endDateInput.value }]));
+        // Add the car image to formData if it exists
+        if (carImageInput.files.length > 0) {
+            formData.append('carImage', carImageInput.files[0]);
+        }
 
+        // Get the token from localStorage and prepare the headers
+        const token = localStorage.getItem('token'); // Assuming you've stored the token under the key 'token'
+        const headers = new Headers();
+        headers.append('Authorization', 'Bearer ' + token);
+
+        // Since we are including a file, we do not set Content-Type to application/json
+        // The browser will set the Content-Type to multipart/form-data and include the boundary
         fetch('/api/list-car', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(jsonData)
-        })
+            headers: headers,
+            body: formData
+        })        
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
+                throw new Error('Network response was not ok: ' + response.statusText);
             }
-            return response.json(); // Or 'response.text()' if your server responds with text
+            return response.json();
         })
         .then(data => {
-            console.log(data); // Handle success
+            console.log(data);
             alert('Car listed successfully!');
-            // Optionally redirect or clear form here
-            // window.location.href = '/some-where-else';
+            window.location.href = '/some-other-page'; // Redirect as needed
         })
         .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
             alert('Error listing car. Please try again.');
         });
+    });
+
+    // Function to validate dates
+    function validateDates() {
+        const startDate = new Date(startDateInput.value);
+        const endDate = new Date(endDateInput.value);
+        return startDate < endDate;
     }
 });
