@@ -1,90 +1,60 @@
-// Mediator object
-const carListingMediator = (function() {
-    const channels = {};
+document.addEventListener('DOMContentLoaded', function() {
+    const carListingForm = document.getElementById('carListingForm');
+    const carImageInput = document.getElementById('carImage');
 
-    const subscribe = function(channel, fn) {
-        if (!channels[channel]) channels[channel] = [];
-        channels[channel].push({ context: this, callback: fn });
-        return this;
-    };
+    carListingForm.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-    const publish = function(channel, ...args) {
-        if (!channels[channel]) return false;
-        channels[channel].forEach(subscription => {
-            subscription.callback.apply(subscription.context, args);
-        });
-        return this;
-    };
+        // Create a FormData object, which allows you to form key-value pairs
+        const formData = new FormData(carListingForm);
+        
+        // If an image was selected, read it as Data URL (Base64)
+        if (carImageInput.files.length > 0) {
+            const file = carImageInput.files[0];
+            const reader = new FileReader();
 
-    return {
-        subscribe,
-        publish
-    };
-})();
+            reader.onloadend = function() {
+                // After conversion, add the Base64 image to the form data
+                formData.append('carImage', reader.result);
 
-// Helper function to convert image to Base64
-function convertToBase64(file, callback) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const base64 = btoa(e.target.result);
-        callback(base64);
-    };
-    reader.readAsBinaryString(file);
-}
+                // Send the form data with the Base64 image to the server
+                submitCarListing(formData);
+            };
 
-// Subscription for listCar event
-carListingMediator.subscribe('listCar', formData => {
-    const listCarButton = document.querySelector('button[type="submit"]');
-    listCarButton.disabled = true;
-
-    fetch('/list-car', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP status ${response.status}`);
+            reader.readAsDataURL(file); // This will convert the image to Base64
+        } else {
+            // If no image, just send the form data
+            submitCarListing(formData);
         }
-        return response.json();
-    })
-    .then(data => {
-        alert('Car listed successfully!');
-        window.location.href = '/your-listings.html'; // Redirect to the listings page
-    })
-    .catch(error => {
-        alert('Listing failed. Please try again.');
-        console.error('Listing failed:', error);
-    })
-    .finally(() => {
-        listCarButton.disabled = false;
     });
-});
 
-// List car form event listener using mediator
-document.getElementById('carListingForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+    function submitCarListing(formData) {
+        // Here we handle the submission to the server
+        // Assuming the server is expecting JSON, we'll convert FormData to a JSON object
+        const jsonData = Object.fromEntries(formData.entries());
 
-    const formData = {
-        make: document.getElementById('make').value,
-        model: document.getElementById('model').value,
-        year: document.getElementById('year').value,
-        mileage: document.getElementById('mileage').value,
-        // Include other form fields here
-        image: document.getElementById('base64Image').value // The Base64 image string
-    };
-
-    // Check if a file was selected
-    const fileInput = document.getElementById('carImage');
-    if (fileInput.files && fileInput.files[0]) {
-        convertToBase64(fileInput.files[0], function(base64Image) {
-            formData.image = base64Image;
-            carListingMediator.publish('listCar', formData);
+        fetch('/api/list-car', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json(); // Or 'response.text()' if your server responds with text
+        })
+        .then(data => {
+            console.log(data); // Handle success
+            alert('Car listed successfully!');
+            // Optionally redirect or clear form here
+            // window.location.href = '/some-where-else';
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+            alert('Error listing car. Please try again.');
         });
-    } else {
-        // If no image was selected, proceed without the image
-        carListingMediator.publish('listCar', formData);
     }
 });

@@ -15,7 +15,7 @@ const carListingSchema = new mongoose.Schema({
     perDay: Number,
   },
   availability: [{ startDate: Date, endDate: Date }],
-  images: [String], // URLs to images of the car
+  image: String, // Store a single Base64 image string
   createdAt: { type: Date, default: Date.now }
 });
 

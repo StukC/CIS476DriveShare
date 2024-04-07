@@ -1,17 +1,45 @@
 const express = require('express');
+const CarListing = require('../models/carListing');
 const router = express.Router();
-const verifyToken = require('../middleware/verifyToken');
-const Car = require('../models/car');
+const authenticate = require('../middleware/authenticate'); // Adjust the path as necessary
 
-// Add a new car listing (Protected)
-router.post('/list-car', verifyToken, async (req, res) => {
+// Middleware to extract user from token and add to request object
+router.use(authenticate);
+
+// Endpoint to list a new car
+router.post('/list-car', async (req, res) => {
   try {
-    // req.user contains user information from the token
-    const newCar = new Car({ ...req.body, owner: req.user.userId });
-    await newCar.save();
-    res.status(201).json(newCar);
+    const { make, model, year, mileage, features, location, pricing, availability, image } = req.body;
+    const carListing = new CarListing({
+      owner: req.user._id,
+      make,
+      model,
+      year,
+      mileage,
+      features: features.split(','),
+      location,
+      pricing: {
+        perDay: pricing
+      },
+      availability,
+      image
+    });
+    await carListing.save();
+    res.status(201).send('Car listed successfully');
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("An error occurred while listing the car:", error);
+    res.status(400).send(error.message);
+  }
+});
+
+// Endpoint to get car listings
+router.get('/car-listings', async (req, res) => {
+  try {
+    const listings = await CarListing.find({});
+    res.status(200).json(listings);
+  } catch (error) {
+    console.error("An error occurred while fetching car listings:", error);
+    res.status(500).send(error.message);
   }
 });
 
