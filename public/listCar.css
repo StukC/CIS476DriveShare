@@ -65,6 +65,41 @@ main {
     text-align: center;
 }
 
-/* You can add more specific styling for your form fields here */
-/* ... */
+.car-form {
+    background-color: #f8f9fa; /* Light grey background for the form area */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    max-width: 600px; /* Restrict the form width for better aesthetics */
+    margin: 30px auto; /* Center the form in the page */
+    display: flex;
+    flex-direction: column; /* Stack form inputs vertically */
+    gap: 15px; /* Add space between form inputs */
+}
+
+.car-form label {
+    font-weight: bold;
+    margin-bottom: 5px; /* Space between label and input */
+}
+
+.car-form input[type="text"],
+.car-form input[type="number"],
+.car-form input[type="date"],
+.car-form input[type="submit"] {
+    width: 100%; /* Full width within form */
+    padding: 10px;
+    margin-bottom: 15px; /* Space after each input */
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+}
+
+.car-form input[type="submit"] {
+    background-color: #007bff; /* Use the same blue as the header */
+    color: white;
+    cursor: pointer; /* Cursor changes to a hand icon when hovering over button */
+}
+
+.car-form input[type="submit"]:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
 
