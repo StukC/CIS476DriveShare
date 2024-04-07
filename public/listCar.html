@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DriveShare - List Your Car</title>
+    <link rel="stylesheet" href="listCar.css">
+    <!-- Link to other required scripts or styles -->
+</head>
+<body>
+
+<header>
+    <h1>Welcome to DriveShare</h1>
+    <nav>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="findCar.html">Find a Car</a></li>
+            <li><a href="myCars.html">My Cars</a></li>
+            <li><a href="logout.html">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <div class="container">
+        <h2>List Your Car</h2>
+        <form id="carListingForm" class="car-form">
+        <label for="make">Make:</label>
+        <input type="text" id="make" name="make" required>
+        
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="model" required>
+        
+        <label for="year">Year:</label>
+        <input type="number" id="year" name="year" required>
+        
+        <label for="mileage">Mileage:</label>
+        <input type="number" id="mileage" name="mileage" required>
+        
+        <label for="location">Pick Up Location:</label>
+        <input type="text" id="location" name="location" required>
+        
+        <label for="pricePerDay">Price Per Day:</label>
+        <input type="number" id="pricePerDay" name="price" required>
+        
+        <label for="availability">Availability Dates:</label>
+        <input type="text" id="availability" name="availability" placeholder="YYYY-MM-DD to YYYY-MM-DD" required>
+        
+        <label for="features">Features (comma-separated):</label>
+        <input type="text" id="features" name="features">
+        
+        <input type="submit" value="List Car">
+    </form>
+</div>
+</main>
+
+</body>
+</html>

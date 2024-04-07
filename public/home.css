@@ -1,29 +1,33 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #ffffff; /* Lighter background for a cleaner look */
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
+    flex-direction: column;
     align-items: center;
     min-height: 100vh;
 }
 
 .container {
-    width: 80%;
-    max-width: 1200px;
+    width: 100%; /* Change this from 80% to 100% */
+    max-width: none; /* Remove the max-width or set it to none */
 }
 
 header {
-    width: 100%;
-    background-color: #007bff; /* A blue header background */
+    width: 100%; /* This ensures the header is full width */
+    background-color: #007bff;
     padding: 10px 0;
+    box-sizing: border-box; /* This ensures padding is included in the width */
 }
 
 header h1 {
     color: #fff;
     text-align: center;
     margin: 0;
+    width: 80%; /* Centralize the title if needed */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 nav ul {
@@ -53,15 +57,10 @@ nav a:hover {
 }
 
 main {
-    flex: 1; /* Take available space */
+    flex: 1;
+    width: 80%; /* You might want to set a specific width for your main content */
+    margin-left: auto; /* This will center your main content */
+    margin-right: auto;
 }
 
-.car-listings {
-    margin-top: 20px;
-}
-
-.car-listings h2 {
-    color: #333;
-    text-align: center;
-}
-
+/* ... Other styles ... */
