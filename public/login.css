@@ -44,3 +44,34 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #0056b3;
 }
+
+.container {
+    width: 80%;
+    max-width: 1200px;
+    margin-top: 20px;
+}
+
+header h1 {
+    color: #333;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+nav a:hover {
+    color: #0056b3;
+}
+
+.car-listings h2 {
+    color: #333;
+}
