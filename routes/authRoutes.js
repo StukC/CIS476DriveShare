@@ -65,10 +65,25 @@ router.post('/verify-security-answers', async (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    // Assuming you have security answers stored as securityAnswer1, securityAnswer2, etc.
+    console.log(`User found: ${email}`);
+
+    // Log the expected answers from the database
+    console.log(`Expected answers: [
+      ${user.securityAnswer1}, 
+      ${user.securityAnswer2}, 
+      ${user.securityAnswer3}
+    ]`);
+
+    // Log the provided answers
+    console.log(`Provided answers: ${answers}`);
+
     for (let i = 0; i < answers.length; i++) {
       const answerKey = `securityAnswer${i + 1}`;
       const isMatch = await bcrypt.compare(answers[i], user[answerKey]);
+
+      // Log the comparison result
+      console.log(`Answer ${i + 1}: ${answers[i]} is ${isMatch ? 'correct' : 'incorrect'}`);
+
       if (!isMatch) {
         return res.status(400).send(`Security answer ${i + 1} is incorrect.`);
       }
@@ -81,7 +96,6 @@ router.post('/verify-security-answers', async (req, res) => {
   }
 });
 
-
 router.post('/reset-password', async (req, res) => {
   const { email, newPassword } = req.body;
   try {
@@ -89,10 +103,14 @@ router.post('/reset-password', async (req, res) => {
     if (!user) {
       return res.status(404).send('User not found');
     }
-    
+
+    // Hash the new password directly here
     const hashedPassword = await bcrypt.hash(newPassword, 8);
+    // Set the password directly, bypassing Mongoose hooks
     user.password = hashedPassword;
-    await user.save();
+
+    // Use .updateOne to bypass the pre-save hook
+    await User.updateOne({ _id: user._id }, { password: hashedPassword });
 
     res.json({ message: 'Password has been reset successfully' });
   } catch (error) {
@@ -100,5 +118,6 @@ router.post('/reset-password', async (req, res) => {
     res.status(500).send("An error occurred while resetting the password.");
   }
 });
+
 
 module.exports = router;
