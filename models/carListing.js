@@ -2,11 +2,10 @@ const mongoose = require('mongoose');
 
 const carListingSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  model: String,
   make: String,
+  model: String,
   year: Number,
   mileage: Number,
-  features: [String],
   location: {
     type: { type: String, enum: ['Point'], default: 'Point' },
     coordinates: { type: [Number], default: [0, 0] },

@@ -7,44 +7,36 @@ document.addEventListener('DOMContentLoaded', function() {
     carListingForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        // Validate dates
         if (!validateDates()) {
             alert('Please check the dates. The start date must be before the end date.');
             return;
         }
 
-        // Create a FormData object, which allows you to form key-value pairs
-        const formData = new FormData();
-        formData.append('make', carListingForm.elements['make'].value);
-        formData.append('model', carListingForm.elements['model'].value);
-        formData.append('year', carListingForm.elements['year'].value);
-        formData.append('mileage', carListingForm.elements['mileage'].value);
-        formData.append('features', carListingForm.elements['features'].value); // Assuming this is a comma-separated list
-        formData.append('location', carListingForm.elements['location'].value); // Assuming this is a stringified JSON of coordinates
-        formData.append('pricing', JSON.stringify({ perDay: carListingForm.elements['pricePerDay'].value }));
-        formData.append('availability', JSON.stringify([{ startDate: startDateInput.value, endDate: endDateInput.value }]));
-        // Add the car image to formData if it exists
+        const formData = new FormData(carListingForm);
         if (carImageInput.files.length > 0) {
             formData.append('carImage', carImageInput.files[0]);
         }
 
-        // Get the token from localStorage and prepare the headers
-        const token = localStorage.getItem('token'); // Assuming you've stored the token under the key 'token'
-        const headers = new Headers();
-        headers.append('Authorization', 'Bearer ' + token);
+        const token = localStorage.getItem('token'); // Retrieving the stored token
+        const headers = new Headers({
+            'Authorization': 'Bearer ' + token, // Adding the Authorization header
+        });
 
-        // Since we are including a file, we do not set Content-Type to application/json
-        // The browser will set the Content-Type to multipart/form-data and include the boundary
         fetch('/api/list-car', {
             method: 'POST',
-            headers: headers,
-            body: formData
+            headers: headers, // Headers are passed here without 'Content-Type'
+            body: formData // The FormData object is passed directly
         })        
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok: ' + response.statusText);
             }
-            return response.json();
+            // We only parse the JSON response if the server actually sent JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            }
+            return response.text(); // If the server's response isn't JSON, handle it as text
         })
         .then(data => {
             console.log(data);
@@ -57,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Function to validate dates
     function validateDates() {
         const startDate = new Date(startDateInput.value);
         const endDate = new Date(endDateInput.value);

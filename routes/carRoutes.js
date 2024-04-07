@@ -8,29 +8,31 @@ router.use(authenticate);
 
 // Endpoint to list a new car
 router.post('/list-car', async (req, res) => {
-  try {
-    const { make, model, year, mileage, features, location, pricing, availability, image } = req.body;
-    const carListing = new CarListing({
-      owner: req.user._id,
-      make,
-      model,
-      year,
-      mileage,
-      features: features.split(','),
-      location,
-      pricing: {
-        perDay: pricing
-      },
-      availability,
-      image
-    });
-    await carListing.save();
-    res.status(201).send('Car listed successfully');
-  } catch (error) {
-    console.error("An error occurred while listing the car:", error);
-    res.status(400).send(error.message);
-  }
-});
+    try {
+      const { make, model, year, mileage, location, pricing, availability, image } = req.body;
+  
+      const carListing = new CarListing({
+        owner: req.user._id, // Assuming you have user information from a middleware
+        make,
+        model,
+        year,
+        mileage,
+        location,
+        pricing: {
+          perDay: pricing
+        },
+        availability,
+        image // Assuming the image is a Base64 string
+      });
+      
+      await carListing.save();
+      res.status(201).send('Car listed successfully');
+    } catch (error) {
+      console.error("An error occurred while listing the car:", error);
+      res.status(400).send(error.message);
+    }
+  });
+  
 
 // Endpoint to get car listings
 router.get('/car-listings', async (req, res) => {
