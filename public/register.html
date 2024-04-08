@@ -7,30 +7,30 @@
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
-    <div class="form-container">
-        <h2>Register</h2>
-        <form id="registerForm">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" placeholder="Enter your email" required>
+    <div class="registration-form-container">
+        <h2 class="form-title">Create Your Account</h2>
+        <form id="registerForm" class="registration-form">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
             </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
             </div>
-            <div class="form-group">
-                <label for="securityAnswer1">Your first pet's name?</label>
-                <input type="text" id="securityAnswer1" name="securityAnswer1" placeholder="Answer" required>
+            <div class="input-group">
+                <label for="securityAnswer1">Mother's maiden name?</label>
+                <input type="text" id="securityAnswer1" name="securityAnswer1" required>
             </div>
-            <div class="form-group">
-                <label for="securityAnswer2">The city you were born in?</label>
-                <input type="text" id="securityAnswer2" name="securityAnswer2" placeholder="Answer" required>
+            <div class="input-group">
+                <label for="securityAnswer2">Favorite teacher from school?</label>
+                <input type="text" id="securityAnswer2" name="securityAnswer2" required>
             </div>
-            <div class="form-group">
-                <label for="securityAnswer3">Your favorite book?</label>
-                <input type="text" id="securityAnswer3" name="securityAnswer3" placeholder="Answer" required>
+            <div class="input-group">
+                <label for="securityAnswer3">Your favorite color?</label>
+                <input type="text" id="securityAnswer3" name="securityAnswer3" required>
             </div>
-            <button type="submit">Register</button>
+            <button type="submit" class="submit-btn">Register</button>
         </form>
     </div>
     <script src="register.js"></script>

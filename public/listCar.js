@@ -1,57 +1,73 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const carListingForm = document.getElementById('carListingForm');
-    const carImageInput = document.getElementById('carImage');
-    const startDateInput = document.getElementById('startDate');
-    const endDateInput = document.getElementById('endDate');
-
-    carListingForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        if (!validateDates()) {
-            alert('Please check the dates. The start date must be before the end date.');
-            return;
-        }
-
-        const formData = new FormData(carListingForm);
-        if (carImageInput.files.length > 0) {
-            formData.append('carImage', carImageInput.files[0]);
-        }
-
-        const token = localStorage.getItem('token'); // Retrieving the stored token
-        const headers = new Headers({
-            'Authorization': 'Bearer ' + token, // Adding the Authorization header
-        });
-
-        fetch('/api/list-car', {
-            method: 'POST',
-            headers: headers, // Headers are passed here without 'Content-Type'
-            body: formData // The FormData object is passed directly
-        })        
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok: ' + response.statusText);
-            }
-            // We only parse the JSON response if the server actually sent JSON
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('application/json')) {
-                return response.json();
-            }
-            return response.text(); // If the server's response isn't JSON, handle it as text
-        })
-        .then(data => {
-            console.log(data);
-            alert('Car listed successfully!');
-            window.location.href = '/some-other-page'; // Redirect as needed
-        })
-        .catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-            alert('Error listing car. Please try again.');
-        });
-    });
-
-    function validateDates() {
-        const startDate = new Date(startDateInput.value);
-        const endDate = new Date(endDateInput.value);
-        return startDate < endDate;
+class CarBuilder {
+    constructor() {
+        this.car = {};
     }
+
+    setMake(make) {
+        this.car.make = make;
+        return this; // Return the instance to allow for chaining
+    }
+
+    setModel(model) {
+        this.car.model = model;
+        return this;
+    }
+
+    setYear(year) {
+        this.car.year = year;
+        return this;
+    }
+
+    setMileage(mileage) {
+        this.car.mileage = mileage;
+        return this;
+    }
+
+    setLocation(location) {
+        this.car.location = location;
+        return this;
+    }
+
+    setPricePerDay(pricePerDay) {
+        this.car.pricePerDay = pricePerDay;
+        return this;
+    }
+
+    setStartDate(startDate) {
+        this.car.startDate = startDate;
+        return this;
+    }
+
+    setEndDate(endDate) {
+        this.car.endDate = endDate;
+        return this;
+    }
+
+    // Method to return the final car object
+    build() {
+        return this.car;
+    }
+}
+document.getElementById('carListingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const car = new CarBuilder()
+        .setMake(document.getElementById('make').value)
+        .setModel(document.getElementById('model').value)
+        .setYear(document.getElementById('year').value)
+        .setMileage(document.getElementById('mileage').value)
+        .setLocation(document.getElementById('location').value)
+        .setPricePerDay(document.getElementById('pricePerDay').value)
+        .setStartDate(document.getElementById('startDate').value)
+        .setEndDate(document.getElementById('endDate').value)
+        .build();
+
+    // Retrieve existing cars array or initialize a new one
+    const cars = JSON.parse(localStorage.getItem('carsData')) || [];
+    cars.push(car); // Add the new car to the array
+    localStorage.setItem('carsData', JSON.stringify(cars)); // Save back to localStorage
+    
+    alert('Car listed successfully!');
+    window.location.href = 'home.html'; // Redirect or show a message
 });
+

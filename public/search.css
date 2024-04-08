@@ -1,0 +1,68 @@
+body {
+    font-family: 'Times New Roman', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f2f5;
+}
+
+header h1 {
+    text-align: center;
+}
+
+.search-container {
+    margin: auto;
+    width: 80%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+input[type="text"], input[type="date"], button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-button {
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.search-button:hover {
+    background-color: #555;
+}
+
+.search-results div {
+    border: 1px solid #ddd;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.search-results h3, .search-results p {
+    margin: 5px 0;
+}
+
+button {
+    margin-top: 10px;
+    background-color: #000;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #222;
+}

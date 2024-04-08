@@ -2,25 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DriveShare - Home</title>
     <link rel="stylesheet" href="home.css">
-    <script>
-        function logout() {
-            localStorage.removeItem('token'); // Use 'token' as the key, as found in your login.js
-            window.location.href = 'login.html'; // Redirect to the login page
-        }
-      </script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Welcome to DriveShare</h1>
+            <h1>DriveShare</h1>
             <nav>
                 <ul>
                     <li><a href="listCar.html">List Your Car</a></li>
                     <li><a href="search.html">Find a Car</a></li>
                     <li><a href="listings.html">My Cars</a></li>
+                    <li><a href="messages.html">Messages</a></li>
+                    <li><a href="payment.html">Make a Payment</a></li>
                     <li><a href="#" onclick="logout(); return false;">Logout</a></li>
                 </ul>
             </nav>
@@ -29,8 +24,42 @@
             <section class="car-listings">
                 <h2>Available Cars</h2>
                 <!-- Car listings will be dynamically inserted here -->
+            
+            
             </section>
         </main>
     </div>
+    <script>
+        window.onload = function() {
+            displayCars();
+        };
+        
+        function displayCars() {
+            const carListingsSection = document.querySelector('.car-listings');
+            const carsData = JSON.parse(localStorage.getItem('carsData')) || [];
+            carListingsSection.innerHTML = '';
+        
+            carsData.forEach(car => {
+                const carListing = document.createElement('div');
+                carListing.innerHTML = `
+                    <h3>${car.make} ${car.model}</h3>
+                    <p>Year: ${car.year}</p>
+                    <p>Mileage: ${car.mileage} miles</p>
+                    <p>Location: ${car.location}</p>
+                    <p>Price per Day: $${car.pricePerDay}</p>
+                    <p>Available: ${car.startDate} to ${car.endDate}</p>
+                `;
+                carListingsSection.appendChild(carListing);
+            });
+        }
+        function logout() {
+            // Example logout function; adapt as needed for your app
+            localStorage.removeItem('token'); // Assuming 'token' is what you use to manage login sessions
+            window.location.href = 'login.html'; // Redirect to login page
+        }
+    
+    </script>
+     <script src="home.js"></script> <!-- Link to your external JS file if the logout function is defined there -->
+
 </body>
 </html>

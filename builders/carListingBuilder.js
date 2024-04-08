@@ -43,16 +43,4 @@ class CarListingBuilder {
     }
   }
   
-  // Usage
-  const carListing = new CarListingBuilder()
-    .setModel('Model S')
-    .setMake('Tesla')
-    .setYear(2020)
-    .setMileage(15000)
-    .setLocation({ latitude: 37.7749, longitude: -122.4194 })
-    .setPricing({ perDay: 100 })
-    .setAvailability([{ startDate: new Date(), endDate: new Date() }])
-    .build();
-  
-  console.log(carListing);
-  
+ 

@@ -61,11 +61,11 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     const formData = {
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
-        securityQuestion1: "Your first pet's name?", // Use actual question text
+        securityQuestion1: "Your mom's maiden name?", // Use actual question text
         securityAnswer1: document.getElementById('securityAnswer1').value,
-        securityQuestion2: "The city you were born in?", // Use actual question text
+        securityQuestion2: "Your favorite teacher in school?", // Use actual question text
         securityAnswer2: document.getElementById('securityAnswer2').value,
-        securityQuestion3: "Your favorite book?", // Use actual question text
+        securityQuestion3: "Your favorite color?", // Use actual question text
         securityAnswer3: document.getElementById('securityAnswer3').value
     };
 

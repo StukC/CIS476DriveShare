@@ -1,0 +1,18 @@
+.listings-container {
+    margin: 20px;
+    padding: 10px;
+}
+
+.listing {
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.edit-btn {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 10px 24px;
+    margin: 5px;
+    cursor: pointer;
+}
